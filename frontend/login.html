@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+
+```
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f4f4f4;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .container {
+        width: 350px;
+        background: white;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px gray;
+    }
+
+    h2 {
+        text-align: center;
+    }
+
+    input {
+        width: 100%;
+        padding: 10px;
+        margin-top: 10px;
+        margin-bottom: 15px;
+    }
+
+    button {
+        width: 100%;
+        padding: 10px;
+        background: blue;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background: darkblue;
+    }
+
+    p {
+        text-align: center;
+    }
+</style>
+```
+
+</head>
+
+<body>
+
+```
+<div class="container">
+
+    <h2>Login</h2>
+
+    <input type="email"
+           id="email"
+           placeholder="Enter Email">
+
+    <input type="password"
+           id="password"
+           placeholder="Enter Password">
+
+    <button onclick="login()">
+        Login
+    </button>
+
+    <p>
+        Don't have an account?
+        <a href="register.html">
+            Register
+        </a>
+    </p>
+
+</div>
+
+<script>
+
+    async function login() {
+
+        const email =
+            document.getElementById("email").value;
+
+        const password =
+            document.getElementById("password").value;
+
+        try {
+
+            const response =
+                await fetch(
+                    "http://localhost:5000/api/auth/login",
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+
+                        body: JSON.stringify({
+                            email: email,
+                            password: password
+                        })
+                    }
+                );
+
+            const data =
+                await response.json();
+
+            if (response.ok) {
+
+                localStorage.setItem(
+                    "token",
+                    data.token
+                );
+
+                localStorage.setItem(
+                    "user",
+                    JSON.stringify(data.user)
+                );
+
+                alert("Login Successful");
+
+                if (data.user.role === "admin") {
+
+                    window.location.href =
+                        "admin-dashboard.html";
+
+                } else {
+
+                    window.location.href =
+                        "student-dashboard.html";
+
+                }
+
+            } else {
+
+                alert(data.message);
+
+            }
+
+        } catch (error) {
+
+            console.log(error);
+
+            alert("Login Failed");
+
+        }
+
+    }
+
+</script>
+```
+
+</body>
+
+</html>

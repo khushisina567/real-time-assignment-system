@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard</title>
+
+<style>
+
+body{
+    font-family: Arial, sans-serif;
+    background:#f4f4f4;
+    margin:0;
+    padding:0;
+}
+
+.navbar{
+    background:#007bff;
+    color:white;
+    padding:15px;
+    text-align:center;
+}
+
+.container{
+    width:90%;
+    margin:20px auto;
+}
+
+.card{
+    background:white;
+    padding:20px;
+    border-radius:10px;
+    margin-bottom:20px;
+    box-shadow:0px 2px 5px rgba(0,0,0,0.2);
+}
+
+button{
+    background:#007bff;
+    color:white;
+    border:none;
+    padding:10px 20px;
+    border-radius:5px;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#0056b3;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:20px;
+}
+
+table, th, td{
+    border:1px solid #ddd;
+}
+
+th, td{
+    padding:12px;
+    text-align:left;
+}
+
+th{
+    background:#007bff;
+    color:white;
+}
+
+a{
+    text-decoration:none;
+    color:blue;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="navbar">
+    <h2>Admin Dashboard</h2>
+</div>
+
+<div class="container">
+
+```
+<div class="card">
+
+    <h3>Upload New Assignment</h3>
+
+    <button onclick="window.location.href='upload.html'">
+        Upload Assignment
+    </button>
+
+    <button onclick="loadAssignments()">
+        Refresh List
+    </button>
+
+    <button onclick="logout()">
+        Logout
+    </button>
+
+</div>
+
+<div class="card">
+
+    <h3>All Assignments</h3>
+
+    <table>
+
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th>File Type</th>
+                <th>Download</th>
+            </tr>
+        </thead>
+
+        <tbody id="assignmentTable">
+
+        </tbody>
+
+    </table>
+
+</div>
+```
+
+</div>
+
+<script>
+
+async function loadAssignments(){
+
+    try{
+
+        const response =
+        await fetch(
+        "http://localhost:5000/api/assignments"
+        );
+
+        const assignments =
+        await response.json();
+
+        let rows = "";
+
+        assignments.forEach(item => {
+
+            rows += `
+            <tr>
+
+                <td>${item.title}</td>
+
+                <td>${item.description}</td>
+
+                <td>${item.fileType}</td>
+
+                <td>
+
+                <a
+                href="http://localhost:5000/${item.fileUrl}"
+                target="_blank">
+
+                Download
+
+                </a>
+
+                </td>
+
+            </tr>
+            `;
+
+        });
+
+        document.getElementById(
+        "assignmentTable"
+        ).innerHTML = rows;
+
+    }
+    catch(error){
+
+        console.log(error);
+
+    }
+
+}
+
+function logout(){
+
+    localStorage.removeItem("token");
+
+    window.location.href =
+    "login.html";
+
+}
+
+window.onload =
+loadAssignments;
+
+</script>
+
+</body>
+</html>

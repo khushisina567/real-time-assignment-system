@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Assignments</title>
+</head>
+<body>
+
+<h2>Assignments</h2>
+
+<div id="list"></div>
+
+<script>
+
+async function loadAssignments(){
+
+const response = await fetch(
+"http://localhost:5000/api/assignments"
+);
+
+const assignments =
+await response.json();
+
+let html="";
+
+assignments.forEach(a=>{
+
+html += `
+<div>
+<h3>${a.title}</h3>
+<p>${a.description}</p>
+<hr>
+</div>
+`;
+
+});
+
+document.getElementById("list").innerHTML=html;
+
+}
+
+loadAssignments();
+
+</script>
+
+</body>
+</html>
